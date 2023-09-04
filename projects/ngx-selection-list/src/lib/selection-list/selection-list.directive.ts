@@ -13,7 +13,7 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { untilDestroyed } from '@ngneat/until-destroy';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { filter, merge, startWith, switchMap, tap } from 'rxjs';
 
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
@@ -45,6 +45,7 @@ export type SelectionListType = 'listbox' | 'grid';
  * </div>
  * @author Alexander Merz
  */
+@UntilDestroy()
 @Directive({
   standalone: true,
   selector: '[ngxSelectionList]',
