@@ -17,6 +17,6 @@ export interface Option<T> extends OptionState<T> {
 
 export interface OptionState<T> {
   selected: boolean;
-  value: T;
+  value: T | undefined;
 }
 

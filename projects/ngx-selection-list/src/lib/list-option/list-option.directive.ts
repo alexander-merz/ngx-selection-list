@@ -17,8 +17,6 @@ const DEFAULT_SELECTION_TIMEOUT: number = 200;
  *
  * With it comes a {@link selected} and a {@link value} property to reflect the option state.
  *
- * If no value is provided it will fall back to the element's textContent.
- *
  * The selected state is inverted upon click, enter or space.
  *
  * @implements {Option}
@@ -40,8 +38,8 @@ const DEFAULT_SELECTION_TIMEOUT: number = 200;
   },
 })
 export class ListOptionDirective<T = unknown> implements ListOption<T> {
-  @Input({ required: true })
-  value: T = {} as T;
+  @Input()
+  value: T | undefined;
 
   @Input({ transform: coerceBooleanProperty })
   @HostBinding('attr.aria-disabled')

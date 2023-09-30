@@ -19,6 +19,7 @@ import { filter, merge, startWith, switchMap, tap } from 'rxjs';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { ListOption, OptionState } from '../list-option/list-option';
 import { ListOptionDirective, ListOptionType } from '../list-option/list-option.directive';
+import { isNil } from '../utils/is-nil';
 import { tapOnce } from '../utils/tap-once';
 
 export type SelectionListType = 'listbox' | 'grid';
@@ -119,17 +120,20 @@ export class SelectionListDirective<T = unknown> implements ControlValueAccessor
           queueMicrotask(() => this._changeDetectorRef.markForCheck());
         }),
         switchMap((options: ListOption<T>[]) => merge(...options.map((option: ListOption<T>) => option.state$))),
-        filter((state: OptionState<T>) => state.value != null),
-        tap(({ selected, value }: OptionState<T>) => {
+        tap(({selected,value}: OptionState<T>) => {
+          if (isNil(value)) {
+            return;
+          }
+
           if (this.isSingleSelection() && selected && !this.isSelected(value)) {
             this._resetOptions();
           }
+
+          selected ? this._model.select(value) : this._model.deselect(value);
         }),
         untilDestroyed(this),
       )
-      .subscribe(({ selected, value }: OptionState<T>) => {
-        selected ? this._model.select(value) : this._model.deselect(value);
-      });
+      .subscribe();
   }
 
   /**
@@ -154,8 +158,8 @@ export class SelectionListDirective<T = unknown> implements ControlValueAccessor
     return this._model.isMultipleSelection();
   }
 
-  isSelected(value: T): boolean {
-    return this._model.isSelected(value);
+  isSelected(value: T | undefined): boolean {
+    return isNil(value) ? false : this._model.isSelected(value);
   }
 
   isSingleSelection(): boolean {
@@ -230,7 +234,7 @@ export class SelectionListDirective<T = unknown> implements ControlValueAccessor
   private _preselect(options: ListOption<T>[]): void {
     if (this._model.isEmpty()) {
       for (const option of options) {
-        if (option.selected) {
+        if (!isNil(option.value) && option.selected) {
           this._model.select(option.value);
         }
       }
