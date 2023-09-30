@@ -2,8 +2,9 @@
   "name": "ngx-selection-list",
   "version": "0.0.1",
   "peerDependencies": {
-    "@angular/common": "^16.2.0",
-    "@angular/core": "^16.2.0"
+    "@angular/core": ">=13",
+    "@angular/common": ">=13",
+    "rxjs": "^6.4.0 || ^7.0.0"
   },
   "dependencies": {
     "tslib": "^2.3.0"
