@@ -1,6 +1,6 @@
 {
   "name": "ngx-selection-list",
-  "version": "0.0.5",
+  "version": "0.0.0-development",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
