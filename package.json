@@ -16,9 +16,8 @@
     "url": "https://github.com/alexander-merz/ngx-selection-list.git"
   },
   "release": {
-    "branches": [
-      "main"
-    ]
+    "branches": ["main"],
+    "pkgRoot": "dist/ngx-selection-list"
   },
   "dependencies": {
     "@angular/animations": "^16.2.7",
