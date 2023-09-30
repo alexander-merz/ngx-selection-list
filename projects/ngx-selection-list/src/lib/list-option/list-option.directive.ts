@@ -32,6 +32,8 @@ const DEFAULT_SELECTION_TIMEOUT: number = 200;
   host: {
     tabindex: '0',
     role: 'option',
+    '[attr.selected]': 'selected ? "selected" : null',
+    '[attr.disabled]': 'disabled ? "disabled" : null',
     '[class.selectionTimeout]': 'selectionTimeout > 0',
     '[style.cursor]': 'disabled ? "not-allowed" : "pointer"',
     '[style.pointer-events]': 'disabled ? "none" : "auto"',
@@ -42,18 +44,12 @@ export class ListOptionDirective<T = unknown> implements ListOption<T> {
   value: T = {} as T;
 
   @Input({ transform: coerceBooleanProperty })
-  @HostBinding('attr.disabled')
   @HostBinding('attr.aria-disabled')
   disabled: boolean = false;
 
   @Input({ transform: coerceBooleanProperty })
-  @HostBinding('attr.selected')
-  selected: boolean = false;
-
   @HostBinding('attr.aria-selected')
-  protected get ariaSelected(): boolean {
-    return this.selected;
-  }
+  selected: boolean = false;
 
   /**
    * Define a custom timespan (in ms) after which the option goes into deselected state again.
