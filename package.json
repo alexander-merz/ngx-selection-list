@@ -6,7 +6,8 @@
     "start": "ng serve",
     "build": "rm -rf dist && ng build --configuration production",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test --browsers=ChromeHeadless --watch=false"
+    "test": "ng test --browsers=ChromeHeadless --watch=false",
+    "semantic-release": "semantic-release"
   },
   "private": true,
   "dependencies": {
