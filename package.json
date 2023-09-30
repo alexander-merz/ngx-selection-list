@@ -1,6 +1,8 @@
 {
   "name": "ngx-selection-list",
   "version": "0.0.0-development",
+  "main": "dist/esm2022/ngx-selection-list.mjs",
+  "types": "dist/index.d.ts",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
