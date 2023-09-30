@@ -9,7 +9,6 @@
     "test": "ng test --browsers=ChromeHeadless --watch=false",
     "semantic-release": "semantic-release"
   },
-  "private": true,
   "repository": {
     "type": "git",
     "url": "https://github.com/alexander-merz/ngx-selection-list.git"
