@@ -1,0 +1,11 @@
+{
+    "branches": ["main"],
+    "plugins": [
+      [
+        "@semantic-release/npm",
+        {
+          "pkgRoot": "dist/ngx-selection-list"
+        }
+      ]
+    ]
+}
