@@ -10,6 +10,9 @@
     "semantic-release": "semantic-release"
   },
   "private": true,
+  "release": {
+    "branches": ["main"]
+  },
   "dependencies": {
     "@angular/animations": "^16.2.7",
     "@angular/cdk": "^16.2.6",
