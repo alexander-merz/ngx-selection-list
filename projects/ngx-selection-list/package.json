@@ -2,10 +2,8 @@
   "name": "ngx-selection-list",
   "version": "0.0.1",
   "peerDependencies": {
-    "@angular/cdk": ">=13",
-    "@angular/common": ">=13",
     "@angular/core": ">=13",
-    "@angular/forms": ">=13",
+    "@angular/common": ">=13",
     "rxjs": "^6.4.0 || ^7.0.0"
   },
   "dependencies": {
