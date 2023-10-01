@@ -1,3 +1,4 @@
+import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { SelectionChange, SelectionModel } from '@angular/cdk/collections';
 import {
   AfterContentInit,
@@ -9,14 +10,13 @@ import {
   HostBinding,
   Input,
   OnDestroy,
+  OnInit,
   Output,
   QueryList
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { filter, merge, startWith, Subject, switchMap, takeUntil, tap } from 'rxjs';
 
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { ListOption, OptionState } from '../list-option/list-option';
 import { ListOptionDirective, ListOptionType } from '../list-option/list-option.directive';
 import { isNil } from '../utils/is-nil';
@@ -57,7 +57,7 @@ export type SelectionListType = 'listbox' | 'grid';
     },
   ],
 })
-export class SelectionListDirective<T = unknown> implements ControlValueAccessor, AfterContentInit, OnDestroy {
+export class SelectionListDirective<T = unknown> implements ControlValueAccessor, OnInit, AfterContentInit, OnDestroy {
   /** Allow selection of multiple options. */
   @Input({ transform: coerceBooleanProperty })
   @HostBinding('attr.multiple')
@@ -98,9 +98,13 @@ export class SelectionListDirective<T = unknown> implements ControlValueAccessor
   private readonly _destroy$: Subject<void> = new Subject();
 
   constructor(private readonly _changeDetectorRef: ChangeDetectorRef) {
+    this._model = new SelectionModel<T>(false, []);
+  }
+
+  ngOnInit(): void {
     this._model = new SelectionModel<T>(this.multiple, []);
 
-    this._model.changed.pipe(takeUntilDestroyed()).subscribe(({ added, removed }: SelectionChange<T>): void => {
+    this._model.changed.pipe(takeUntil(this._destroy$)).subscribe(({ added, removed }: SelectionChange<T>): void => {
       added.length && this.selected.emit(added[0]);
       removed.length && this.deselected.emit(removed[0]);
       this._onChange(this.value);
