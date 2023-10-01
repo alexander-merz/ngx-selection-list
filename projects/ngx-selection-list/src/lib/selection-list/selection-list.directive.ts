@@ -8,13 +8,13 @@ import {
   forwardRef,
   HostBinding,
   Input,
+  OnDestroy,
   Output,
   QueryList
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { filter, merge, startWith, switchMap, tap } from 'rxjs';
+import { filter, merge, startWith, Subject, switchMap, takeUntil, tap } from 'rxjs';
 
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { ListOption, OptionState } from '../list-option/list-option';
@@ -46,7 +46,6 @@ export type SelectionListType = 'listbox' | 'grid';
  * </div>
  * @author Alexander Merz
  */
-@UntilDestroy()
 @Directive({
   standalone: true,
   selector: '[ngxSelectionList]',
@@ -58,7 +57,7 @@ export type SelectionListType = 'listbox' | 'grid';
     },
   ],
 })
-export class SelectionListDirective<T = unknown> implements ControlValueAccessor, AfterContentInit {
+export class SelectionListDirective<T = unknown> implements ControlValueAccessor, AfterContentInit, OnDestroy {
   /** Allow selection of multiple options. */
   @Input({ transform: coerceBooleanProperty })
   @HostBinding('attr.multiple')
@@ -96,6 +95,8 @@ export class SelectionListDirective<T = unknown> implements ControlValueAccessor
 
   private _isContentReady: boolean = false;
 
+  private readonly _destroy$: Subject<void> = new Subject();
+
   constructor(private readonly _changeDetectorRef: ChangeDetectorRef) {
     this._model = new SelectionModel<T>(this.multiple, []);
 
@@ -120,7 +121,7 @@ export class SelectionListDirective<T = unknown> implements ControlValueAccessor
           queueMicrotask(() => this._changeDetectorRef.markForCheck());
         }),
         switchMap((options: ListOption<T>[]) => merge(...options.map((option: ListOption<T>) => option.state$))),
-        tap(({selected,value}: OptionState<T>) => {
+        tap(({ selected, value }: OptionState<T>) => {
           if (isNil(value)) {
             return;
           }
@@ -131,9 +132,14 @@ export class SelectionListDirective<T = unknown> implements ControlValueAccessor
 
           selected ? this._model.select(value) : this._model.deselect(value);
         }),
-        untilDestroyed(this),
+        takeUntil(this._destroy$)
       )
       .subscribe();
+  }
+
+  ngOnDestroy(): void {
+    this._destroy$.next();
+    this._destroy$.complete();
   }
 
   /**
