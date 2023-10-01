@@ -13,7 +13,8 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { filter, merge, startWith, Subject, switchMap, tap } from 'rxjs';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { filter, merge, startWith, switchMap, tap } from 'rxjs';
 
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { ListOption, OptionState } from '../list-option/list-option';
@@ -45,6 +46,7 @@ export type SelectionListType = 'listbox' | 'grid';
  * </div>
  * @author Alexander Merz
  */
+@UntilDestroy()
 @Directive({
   standalone: true,
   selector: '[ngxSelectionList]',
@@ -92,8 +94,6 @@ export class SelectionListDirective<T = unknown> implements ControlValueAccessor
 
   private _model: SelectionModel<T>;
 
-  private readonly _contentReady$ = new Subject<void>();
-
   private _isContentReady: boolean = false;
 
   constructor(private readonly _changeDetectorRef: ChangeDetectorRef) {
@@ -104,36 +104,36 @@ export class SelectionListDirective<T = unknown> implements ControlValueAccessor
       removed.length && this.deselected.emit(removed[0]);
       this._onChange(this.value);
     });
-
-    this._contentReady$.pipe(
-      switchMap(() => merge(this._listOptionDirectives.changes)),
-      startWith(this.options),
-      filter((options: ListOption<T>[]) => options.length > 0),
-      tapOnce((options: ListOption<T>[]) => this._preselect(options)),
-      tap((options: ListOption<T>[]) => {
-        this._alignOptionTypes();
-        this._syncWithSelectionModel(options);
-        queueMicrotask(() => this._changeDetectorRef.markForCheck());
-      }),
-      switchMap((options: ListOption<T>[]) => merge(...options.map((option: ListOption<T>) => option.state$))),
-      tap(({selected,value}: OptionState<T>) => {
-        if (isNil(value)) {
-          return;
-        }
-
-        if (this.isSingleSelection() && selected && !this.isSelected(value)) {
-          this._resetOptions();
-        }
-
-        selected ? this._model.select(value) : this._model.deselect(value);
-      }),
-      takeUntilDestroyed(),
-    ).subscribe();
   }
 
   ngAfterContentInit(): void {
-    this._contentReady$.next();
-    this._contentReady$.complete();
+    this._isContentReady = true;
+
+    merge(this._listOptionDirectives.changes)
+      .pipe(
+        startWith(this.options),
+        filter((options: ListOption<T>[]) => options.length > 0),
+        tapOnce((options: ListOption<T>[]) => this._preselect(options)),
+        tap((options: ListOption<T>[]) => {
+          this._alignOptionTypes();
+          this._syncWithSelectionModel(options);
+          queueMicrotask(() => this._changeDetectorRef.markForCheck());
+        }),
+        switchMap((options: ListOption<T>[]) => merge(...options.map((option: ListOption<T>) => option.state$))),
+        tap(({selected,value}: OptionState<T>) => {
+          if (isNil(value)) {
+            return;
+          }
+
+          if (this.isSingleSelection() && selected && !this.isSelected(value)) {
+            this._resetOptions();
+          }
+
+          selected ? this._model.select(value) : this._model.deselect(value);
+        }),
+        untilDestroyed(this),
+      )
+      .subscribe();
   }
 
   /**
