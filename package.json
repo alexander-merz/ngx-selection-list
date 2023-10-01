@@ -16,7 +16,9 @@
     "url": "https://github.com/alexander-merz/ngx-selection-list.git"
   },
   "release": {
-    "branches": ["main"],
+    "branches": [
+      "main"
+    ],
     "pkgRoot": "dist/ngx-selection-list"
   },
   "dependencies": {
@@ -29,7 +31,6 @@
     "@angular/platform-browser": "^16.2.7",
     "@angular/platform-browser-dynamic": "^16.2.7",
     "@angular/router": "^16.2.7",
-    "@ngneat/until-destroy": "^10.0.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "^0.13.3"
