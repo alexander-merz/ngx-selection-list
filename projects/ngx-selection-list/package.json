@@ -2,12 +2,14 @@
   "name": "ngx-selection-list",
   "version": "0.0.1",
   "peerDependencies": {
-    "@angular/core": ">=13",
-    "@angular/common": ">=13",
+    "@angular/cdk": ">=16",
+    "@angular/core": ">=16",
+    "@angular/common": ">=16",
     "rxjs": "^6.4.0 || ^7.0.0"
   },
   "dependencies": {
-    "tslib": "^2.3.0"
+    "tslib": "^2.3.0",
+    "@ngneat/until-destroy": "^10.0.0"
   },
   "sideEffects": false
 }
