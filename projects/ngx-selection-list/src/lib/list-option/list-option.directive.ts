@@ -32,6 +32,7 @@ const DEFAULT_SELECTION_TIMEOUT: number = 200;
     role: 'option',
     '[attr.selected]': 'selected ? "selected" : null',
     '[attr.disabled]': 'disabled ? "disabled" : null',
+    '[attr.value]': 'value != null ? value : null',
     '[class.selectionTimeout]': 'selectionTimeout > 0',
     '[style.cursor]': 'disabled ? "not-allowed" : "pointer"',
     '[style.pointer-events]': 'disabled ? "none" : "auto"',
@@ -83,7 +84,7 @@ export class ListOptionDirective<T = unknown> implements ListOption<T> {
   constructor(
     protected readonly _elementRef: ElementRef,
     protected readonly _changeDetectionRef: ChangeDetectorRef,
-  ) {}
+  ) { }
 
   @HostListener('click', ['$event'])
   @HostListener('keydown.enter', ['$event'])
