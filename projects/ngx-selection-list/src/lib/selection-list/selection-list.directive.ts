@@ -83,7 +83,7 @@ export class SelectionListDirective<T = unknown> implements ControlValueAccessor
   /** A list of selected option values if {@link multiple} selection, a single option value otherwise. */
   @HostBinding('attr.value')
   get value(): T | T[] | undefined {
-    return this.isSingleSelection() ? this._model.selected[0] : this._model.selected;
+    return this.isSingleSelection() ? this._model.selected[0] : this._model.hasValue() ? this._model.selected : undefined;
   }
 
   /** A list of all {@link Option Options} */
