@@ -3,7 +3,7 @@ import { fireEvent, render, screen } from '@testing-library/angular';
 import { ListOptionDirective } from "./list-option.directive";
 
 describe(ListOptionDirective.name, () => {
-  it('should change selected state upon click', async () => {
+  it('should toggle selected state upon click', async () => {
     await render('<span ngxListOption [value]="1">Option 1</span>', {
       imports: [ListOptionDirective],
     });
@@ -11,6 +11,7 @@ describe(ListOptionDirective.name, () => {
     const option = screen.getByRole('option');
 
     expect(option).toHaveAccessibleName('Option 1');
+    expect(option).toHaveAttribute('value', '1');
     expect(option).not.toHaveAttribute('selected');
     expect(option).toHaveAttribute('aria-selected', 'false');
 
@@ -18,5 +19,5 @@ describe(ListOptionDirective.name, () => {
 
     expect(option).toHaveAttribute('selected', 'selected');
     expect(option).toHaveAttribute('aria-selected', 'true');
-  })
+  });
 });
