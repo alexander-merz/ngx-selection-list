@@ -19,7 +19,7 @@ import { filter, merge, startWith, Subject, switchMap, takeUntil, tap } from 'rx
 
 import { ListOption, OptionState } from '../list-option/list-option';
 import { ListOptionDirective, ListOptionType } from '../list-option/list-option.directive';
-import { isNil } from '../utils/is-nil';
+import { isNil, isNonNil } from '../utils/nil';
 import { tapOnce } from '../utils/tap-once';
 
 export type SelectionListType = 'listbox' | 'grid';
@@ -83,7 +83,19 @@ export class SelectionListDirective<T = unknown> implements ControlValueAccessor
   /** A list of selected option values if {@link multiple} selection, a single option value otherwise. */
   @HostBinding('attr.value')
   get value(): T | T[] | undefined {
-    return this.isSingleSelection() ? this._model.selected[0] : this._model.hasValue() ? this._model.selected : undefined;
+    if (this.isSingleSelection()) {
+      return this._model.selected[0];
+    }
+
+    if (this._model.hasValue()) {
+      const value = this._model.selected.filter(isNonNil);
+
+      if (value.length) {
+        return value;
+      }
+    }
+
+    return undefined;
   }
 
   /** A list of all {@link Option Options} */
