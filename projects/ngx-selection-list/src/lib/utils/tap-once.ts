@@ -1,4 +1,4 @@
-import { defer, Observable, tap } from "rxjs";
+import { defer, Observable, tap } from 'rxjs';
 
 export function tapOnce<T>(fn: (value: T) => void, options?: { withCondition: (value: T) => boolean }) {
   return (source$: Observable<T>): Observable<T> => {

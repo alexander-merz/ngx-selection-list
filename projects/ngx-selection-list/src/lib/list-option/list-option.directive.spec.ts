@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/angular';
 
-import { ListOptionDirective } from "./list-option.directive";
+import { ListOptionDirective } from './list-option.directive';
 
 describe(ListOptionDirective.name, () => {
   it('should toggle selected state upon click', async () => {

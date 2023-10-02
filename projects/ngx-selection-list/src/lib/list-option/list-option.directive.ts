@@ -1,5 +1,14 @@
 import { coerceBooleanProperty, coerceNumberProperty } from '@angular/cdk/coercion';
-import { ChangeDetectorRef, Directive, ElementRef, EventEmitter, HostBinding, HostListener, Input, Output } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Directive,
+  ElementRef,
+  EventEmitter,
+  HostBinding,
+  HostListener,
+  Input,
+  Output,
+} from '@angular/core';
 import { map, Observable } from 'rxjs';
 
 import { ListOption, OptionState } from './list-option';
@@ -77,14 +86,13 @@ export class ListOptionDirective<T = unknown> implements ListOption<T> {
   readonly selectedChange: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   /** Emits the selected state and the option value upon selection change. */
-  readonly state$: Observable<OptionState<T>> = this.selectedChange.pipe(map((selected: boolean) => ({ selected, value: this.value })));
+  readonly state$: Observable<OptionState<T>> = this.selectedChange.pipe(
+    map((selected: boolean) => ({ selected, value: this.value })),
+  );
 
   private _selectionTimeout?: number;
 
-  constructor(
-    protected readonly _elementRef: ElementRef,
-    protected readonly _changeDetectionRef: ChangeDetectorRef,
-  ) { }
+  constructor(protected readonly _elementRef: ElementRef, protected readonly _changeDetectionRef: ChangeDetectorRef) {}
 
   @HostListener('click', ['$event'])
   @HostListener('keydown.enter', ['$event'])

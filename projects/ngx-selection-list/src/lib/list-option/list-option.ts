@@ -19,4 +19,3 @@ export interface OptionState<T> {
   selected: boolean;
   value: T | undefined;
 }
-

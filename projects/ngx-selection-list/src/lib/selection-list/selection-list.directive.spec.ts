@@ -1,18 +1,17 @@
-import { fireEvent, render, screen } from "@testing-library/angular";
-import { ListOptionDirective } from "../list-option/list-option.directive";
-import { SelectionListDirective } from "./selection-list.directive";
+import { fireEvent, render, screen } from '@testing-library/angular';
+import { ListOptionDirective } from '../list-option/list-option.directive';
+import { SelectionListDirective } from './selection-list.directive';
 
 describe(SelectionListDirective.name, () => {
   it('should be single selection per default', async () => {
-    await render(`
-      <div ngxSelectionList>
+    await render(
+      `<div ngxSelectionList>
         <span ngxListOption [value]="1">Option 1</span>
         <span ngxListOption [value]="2">Option 2</span>
         <span ngxListOption [value]="3">Option 3</span>
-      </div>
-    `, {
-      imports: [ListOptionDirective, SelectionListDirective]
-    });
+      </div>`,
+      { imports: [ListOptionDirective, SelectionListDirective] },
+    );
 
     const selectionList = screen.getByRole('listbox');
 
@@ -41,15 +40,14 @@ describe(SelectionListDirective.name, () => {
   });
 
   it('should allow multi selection', async () => {
-    await render(`
-      <div ngxSelectionList [multiple]="true">
+    await render(
+      `<div ngxSelectionList [multiple]="true">
         <span ngxListOption [value]="1">Option 1</span>
         <span ngxListOption [value]="2">Option 2</span>
         <span ngxListOption [value]="3">Option 3</span>
-      </div>
-    `, {
-      imports: [ListOptionDirective, SelectionListDirective]
-    });
+      </div>`,
+      { imports: [ListOptionDirective, SelectionListDirective] },
+    );
 
     const selectionList = screen.getByRole('listbox');
 

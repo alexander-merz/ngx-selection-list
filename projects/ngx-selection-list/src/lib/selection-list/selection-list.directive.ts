@@ -12,7 +12,7 @@ import {
   OnDestroy,
   OnInit,
   Output,
-  QueryList
+  QueryList,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { filter, merge, startWith, Subject, switchMap, takeUntil, tap } from 'rxjs';
@@ -148,7 +148,7 @@ export class SelectionListDirective<T = unknown> implements ControlValueAccessor
 
           selected ? this._model.select(value) : this._model.deselect(value);
         }),
-        takeUntil(this._destroy$)
+        takeUntil(this._destroy$),
       )
       .subscribe();
   }
