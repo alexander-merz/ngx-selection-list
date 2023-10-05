@@ -6,16 +6,16 @@ import {
   ContentChildren,
   Directive,
   EventEmitter,
-  forwardRef,
   HostBinding,
   Input,
   OnDestroy,
   OnInit,
   Output,
   QueryList,
+  forwardRef,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { filter, merge, startWith, Subject, switchMap, takeUntil, tap } from 'rxjs';
+import { Subject, filter, merge, startWith, switchMap, takeUntil, tap } from 'rxjs';
 
 import { ListOption, OptionState } from '../list-option/list-option';
 import { ListOptionDirective, ListOptionType } from '../list-option/list-option.directive';
@@ -82,20 +82,12 @@ export class SelectionListDirective<T = unknown> implements ControlValueAccessor
 
   /** A list of selected option values if {@link multiple} selection, a single option value otherwise. */
   @HostBinding('attr.value')
-  get value(): T | T[] | undefined {
+  get value(): T | T[] | null {
     if (this.isSingleSelection()) {
-      return this._model.selected[0];
+      return this._model.selected[0] ?? null;
     }
 
-    if (this._model.hasValue()) {
-      const value = this._model.selected.filter(isNonNil);
-
-      if (value.length) {
-        return value;
-      }
-    }
-
-    return undefined;
+    return this._model.selected.length ? this._model.selected : null;
   }
 
   /** A list of all {@link Option Options} */
@@ -180,7 +172,7 @@ export class SelectionListDirective<T = unknown> implements ControlValueAccessor
     return this._model.isMultipleSelection();
   }
 
-  isSelected(value: T | undefined): boolean {
+  isSelected(value: T | null): boolean {
     return isNil(value) ? false : this._model.isSelected(value);
   }
 
@@ -188,7 +180,7 @@ export class SelectionListDirective<T = unknown> implements ControlValueAccessor
     return !this.isMultipleSelection();
   }
 
-  registerOnChange(onChange: (value: T | T[] | undefined) => void): void {
+  registerOnChange(onChange: (value: T | T[] | null) => void): void {
     this._onChange = onChange;
   }
 
@@ -251,7 +243,7 @@ export class SelectionListDirective<T = unknown> implements ControlValueAccessor
     return this.options.filter((option: ListOption<T>) => this.isSelected(option.value));
   }
 
-  private _onChange: (value: T | T[] | undefined) => void = () => null;
+  private _onChange: (value: T | T[] | null) => void = () => null;
 
   private _preselect(options: ListOption<T>[]): void {
     if (this._model.isEmpty()) {

@@ -9,7 +9,7 @@ import {
   Input,
   Output,
 } from '@angular/core';
-import { map, Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 
 import { ListOption, OptionState } from './list-option';
 
@@ -49,7 +49,7 @@ const DEFAULT_SELECTION_TIMEOUT: number = 200;
 })
 export class ListOptionDirective<T = unknown> implements ListOption<T> {
   @Input()
-  value: T | undefined;
+  value: T | null = null;
 
   @Input({ transform: coerceBooleanProperty })
   @HostBinding('attr.aria-disabled')
