@@ -19,7 +19,7 @@ import { Subject, filter, merge, startWith, switchMap, takeUntil, tap } from 'rx
 
 import { ListOption, OptionState } from '../list-option/list-option';
 import { ListOptionDirective, ListOptionType } from '../list-option/list-option.directive';
-import { isNil, isNonNil } from '../utils/nil';
+import { Nil, isNil } from '../utils/nil';
 import { tapOnce } from '../utils/tap-once';
 
 export type SelectionListType = 'listbox' | 'grid';
@@ -212,7 +212,11 @@ export class SelectionListDirective<T = unknown> implements ControlValueAccessor
     }
   }
 
-  writeValue(value: T | T[]): void {
+  writeValue(value: T | T[] | Nil): void {
+    if (isNil(value)) {
+      return;
+    }
+
     // Directly update the model if content is not ready yet
     // Will be synced eventually: _syncWithSelectionModel()
     if (!this._isContentReady) {

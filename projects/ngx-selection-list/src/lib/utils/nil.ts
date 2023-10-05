@@ -1,6 +1,6 @@
-type Nil = null | undefined;
+export type Nil = null | undefined;
 
-type NonNil<T> = T extends Nil ? never : T;
+export type NonNil<T> = T extends Nil ? never : T;
 
 export const isNil = (value: unknown): value is Nil => value == null;
 
